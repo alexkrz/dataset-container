@@ -46,8 +46,7 @@ def main(
     # )
     # h5group = h5file.create_group("images")
     labels = []
-    # for i in tqdm(range(len(imgidx))):
-    for i in tqdm(range(1000)):
+    for i in tqdm(range(len(imgidx))):
         # fname = f"{idx:0{digits_img}d}"
         # print(fname)
         idx = i + 1

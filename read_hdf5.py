@@ -7,27 +7,33 @@ import numpy as np
 from PIL import Image
 
 
+# Function to recursively list all groups and items in an HDF5 file
+def visit_file(hdf5_file: h5py.File, return_first: bool = False):
+    groups = []
+    data = []
+
+    def visitor(name, obj):
+        if isinstance(obj, h5py.Dataset):
+            data.append(name)
+            if return_first:
+                return True  # Stop visiting file
+        elif isinstance(obj, h5py.Group):
+            groups.append(name)
+
+    hdf5_file.visititems(visitor)
+    return groups, data
+
+
 def main(
     hdf5_fp: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface.hdf5",
 ):
-    # List all groups.
-    group = []
-
-    # Store all the full data paths (group/file). These are the keys to access the image data.
-    data = []
-
-    # Function to recursively store all the keys
-    def func(name, obj):
-        if isinstance(obj, h5py.Dataset):
-            data.append(name)
-        elif isinstance(obj, h5py.Group):
-            group.append(name)
-
     h5file = h5py.File(hdf5_fp, "r")
-    # This operation fills the previously created lists `group` and `data`.
-    h5file.visititems(func)
+    groups, data = visit_file(h5file, return_first=True)
 
-    hf_data = np.array(h5file[data[0]])
+    idx = 0
+    hf_data = np.array(h5file[data[idx]])
+    label = int(data[idx].split("/")[0])
+    print("Label:", label)
     image = Image.open(io.BytesIO(hf_data))
     print(image)
     # print("Image Size:", image.size)
