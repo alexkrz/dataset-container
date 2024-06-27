@@ -30,7 +30,7 @@ def main(
 
     # print(len(imgidx))
     digits_img = len(str(len(imgidx)))
-    # digits_label = 5
+    digits_label = 5
 
     # Load images and labels from mxnet to numpy arrays
     h5file = h5py.File(hdf5_fp, "w")
@@ -44,7 +44,8 @@ def main(
     #     shape=(len(imgidx),),
     #     dtype=np.int64,
     # )
-    h5group = h5file.create_group("images")
+    # h5group = h5file.create_group("images")
+    labels = []
     # for i in tqdm(range(len(imgidx))):
     for i in tqdm(range(1000)):
         # fname = f"{idx:0{digits_img}d}"
@@ -58,6 +59,11 @@ def main(
             # label = f"{label:0{digits_label}d}"
         else:
             raise RuntimeError("Unexpected label dtype")
+
+        if label not in labels:
+            labels.append(label)
+            h5group = h5file.create_group(f"{label:0{digits_label}d}")
+
         img_arr = mx.image.imdecode(img).asnumpy()
         # img_bytes = img_arr.tobytes()
 
