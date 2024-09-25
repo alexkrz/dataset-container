@@ -79,6 +79,7 @@ def main(
         jpeg_bytes = jpeg_buffer.getvalue()
         binary_data_np = np.asarray(jpeg_bytes)
 
+        # NOTE: Storing the raw img_arr instead of binary_data_np (with jpeg compression) results in ~10x the file size
         dset = h5group.create_dataset(f"{idx:0{digits_img}d}", data=binary_data_np)
 
         # image_dataset[i] = img_arr
