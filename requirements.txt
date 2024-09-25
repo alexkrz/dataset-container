@@ -9,3 +9,4 @@ tensorflow==2.8.4
 opencv-python==4.6.0.66
 matplotlib==3.8.3
 pandas==2.2.1
+lmdb==1.5.1

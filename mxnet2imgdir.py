@@ -19,7 +19,7 @@ def zip_directory(directory: str, zip_name: str):
 
 
 def main(
-    mxnet_dir: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface-mxnet",
+    mxnet_dir: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface",
     img_dir: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface-jpeg",
     img_ext: str = ".jpg",
 ):

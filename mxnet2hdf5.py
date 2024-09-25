@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 def main(
-    mxnet_dir: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface-mxnet",
+    mxnet_dir: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface",
     hdf5_fp: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface.hdf5",
 ):
     # files = os.listdir(mxnet_dir)
