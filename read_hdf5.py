@@ -27,9 +27,11 @@ def visit_file(hdf5_file: h5py.File, return_first: bool = False):
 def main(
     hdf5_fp: str = os.environ["DATASET_DIR"] + "TrainDatasets/casia_webface.hdf5",
 ):
+    print("Reading file..")
     h5file = h5py.File(hdf5_fp, "r")
-    groups, data = visit_file(h5file, return_first=True)
+    groups, data = visit_file(h5file)
 
+    print("Dataset size:", len(data))
     idx = 0
     hf_data = np.array(h5file[data[idx]])
     label = int(data[idx].split("/")[0])
