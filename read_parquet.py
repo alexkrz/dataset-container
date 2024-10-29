@@ -2,22 +2,22 @@ import io
 import os
 from pathlib import Path
 
-import datasets
 import matplotlib.pyplot as plt
 import pandas as pd
-import pyarrow
+from datasets import load_dataset
 from PIL import Image
 
 # from renumics import spotlight
 
 
-def main(data_p: Path = Path.home() / "Data" / "CV-Classics" / "cifar-10-parquet"):
-    df = pd.read_parquet(data_p / "test-00000-of-00001.parquet")
-    print(df.head())
-    print(df.dtypes)
-    img_bytes = df.loc[0]["img"]["bytes"]
-    img = Image.open(io.BytesIO(img_bytes))
+def main(data_p: Path = Path.home() / "Data" / "TrainDatasets" / "casia_webface-parquet"):
+    assert data_p.exists()
+    ds = load_dataset("parquet", data_dir=data_p, split="train")
+    print("Number of items:", len(ds))
+
+    img, label = ds[0].values()
     plt.imshow(img)
+    plt.xlabel(label)
     plt.show()
 
     # spotlight.show(df)
