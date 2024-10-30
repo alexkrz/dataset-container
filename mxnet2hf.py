@@ -11,9 +11,10 @@ from PIL import Image
 
 
 def main(
-    mxnet_dir: Path = Path.home() / "Data" / "TrainDatasets" / "ms1mv2-mxnet",
-    out_dir: Path = Path.home() / "Data" / "TrainDatasets" / "ms1mv2-parquet",
-    num_shards: int = 20,
+    mxnet_dir: Path = Path.home() / "Data" / "TrainDatasets" / "ms1mv3-mxnet",
+    out_dir: Path = Path.home() / "Data" / "TrainDatasets" / "parquet-files",
+    fname: str = "ms1mv3.parquet",
+    # num_shards: int = 20,
 ):
     assert mxnet_dir.exists()
 
@@ -67,9 +68,13 @@ def main(
 
     ds = Dataset.from_generator(generate_entries)
 
-    for index in range(num_shards):
-        shard = ds.shard(index=index, num_shards=num_shards, contiguous=True)
-        shard.to_parquet(out_dir / f"train-{(index+1):0{5}d}-of-{num_shards:0{5}d}.parquet")
+    # for index in range(num_shards):
+    #     shard = ds.shard(index=index, num_shards=num_shards, contiguous=True)
+    #     shard.to_parquet(out_dir / f"train-{(index+1):0{5}d}-of-{num_shards:0{5}d}.parquet")
+
+    # NOTE: It seems like the datasets library does the sharding automatically in the cache
+    # Therefore it should be fine to just save a single .parquet file
+    ds.to_parquet(out_dir / fname)
 
 
 if __name__ == "__main__":
