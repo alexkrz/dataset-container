@@ -6,35 +6,46 @@ import matplotlib.pyplot as plt
 import mxnet as mx
 import numpy as np
 from datasets import Dataset
+from jsonargparse import CLI
 from PIL import Image
 
 
 def main(
-    mxnet_dir: Path = Path.home() / "Data" / "FairnessBias" / "bupt_balance",
-    out_dir: Path = Path.home() / "Data" / "FairnessBias" / "bupt_balance-parquet",
-    num_shards: int = 10,
+    mxnet_dir: Path = Path.home() / "Data" / "TrainDatasets" / "ms1mv2-mxnet",
+    out_dir: Path = Path.home() / "Data" / "TrainDatasets" / "ms1mv2-parquet",
+    num_shards: int = 20,
 ):
     assert mxnet_dir.exists()
 
     def entry_for_id(idx):
+        # Read sample at idx
         s = imgrec.read_idx(idx)
         header, img_bytes = mx.recordio.unpack(s)
-        label = header.label
-        # assert isinstance(label, float)
-        # label = int(label)
-        assert isinstance(label, np.ndarray)
-        identity = int(label[0])
-        ethnicity = int(label[1])  # TODO: label[1] is always 1. Where is ethnicity encoded?
-        # img_arr = mx.image.imdecode(img).asnumpy()
+
+        # Read image bytes as Pillow image
         pil_image = Image.open(io.BytesIO(img_bytes))
-        # plt.imshow(pil_image)
-        # plt.xlabel(label)
-        # plt.show()
-        return {
-            "img": pil_image,
-            "identity": identity,
-            "ethnicity": ethnicity,
-        }
+
+        # Treat label info
+        label = header.label
+        if isinstance(label, (float, int)):
+            return {
+                "img": pil_image,
+                "label": int(label),
+            }
+        elif isinstance(label, np.ndarray):
+            if len(label) == 2:
+                identity = int(label[0])
+                # TODO: For BUPT dataset: label[1] is always 1. Where is ethnicity encoded?
+                ethnicity = int(label[1])
+                return {
+                    "img": pil_image,
+                    "identity": identity,
+                    "ethnicity": ethnicity,
+                }
+            else:
+                raise NotImplementedError
+        else:
+            raise NotImplementedError
 
     def generate_entries():
         for i in range(len(imgidx)):
@@ -62,4 +73,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    CLI(main, as_positional=False)
