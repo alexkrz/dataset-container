@@ -40,8 +40,7 @@ def main(
                 ethnicity = int(label[1])
                 return {
                     "img": pil_image,
-                    "identity": identity,
-                    "ethnicity": ethnicity,
+                    "label": identity,
                 }
             else:
                 raise NotImplementedError
