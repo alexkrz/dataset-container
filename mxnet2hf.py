@@ -12,11 +12,19 @@ from PIL import Image
 
 
 def main(
-    mxnet_dir: Path = Path.home() / "Data" / "FairnessBias" / "bupt_balance",
-    out_dir: Path = Path.home() / "Data" / "FairnessBias" / "bupt_balance-parquet",
-    fname: str = "bupt_balance.parquet",
-    # num_shards: int = 20,
+    mxnet_dir: str = os.environ["HOME"] + "/Data/TrainDatasets/casia_webface-mxnet",
+    out_dir: str = os.environ["HOME"] + "/Data/TrainDatasets/parquet-files",
+    fname: str = "casia_webface.parquet",
 ):
+    """Convert mxnet RecordIO file to Apache Parquet using Huggingface datasets library.
+
+    Args:
+        mxnet_dir (str, optional): Path to mxnet files.
+        out_dir (str, optional): Output directory where to store the parquet file.
+        fname (str, optional): Output filename.
+    """
+    mxnet_dir = Path(mxnet_dir)  # type: Path
+    out_dir = Path(out_dir)  # type: Path
     assert mxnet_dir.exists()
     BUPT_METADATA = False
     if mxnet_dir.name == "bupt_balance":
@@ -102,4 +110,4 @@ def main(
 
 
 if __name__ == "__main__":
-    CLI(main, as_positional=False)
+    CLI(main, as_positional=False, parser_mode="omegaconf")

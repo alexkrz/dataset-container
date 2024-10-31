@@ -1,0 +1,3 @@
+mxnet_dir: ${oc.env:HOME}/Data/TrainDatasets/ms1mv3-mxnet
+out_dir: ${oc.env:HOME}/Data/TrainDatasets/parquet-files
+fname: ms1mv3.parquet

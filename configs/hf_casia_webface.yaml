@@ -1,0 +1,3 @@
+mxnet_dir: ${oc.env:HOME}/Data/TrainDatasets/casia_webface-mxnet
+out_dir: ${oc.env:HOME}/Data/TrainDatasets/parquet-files
+fname: casia_webface.parquet
