@@ -5,18 +5,22 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import mxnet as mx
 import numpy as np
+import pandas as pd
 from datasets import Dataset
 from jsonargparse import CLI
 from PIL import Image
 
 
 def main(
-    mxnet_dir: Path = Path.home() / "Data" / "TrainDatasets" / "ms1mv3-mxnet",
-    out_dir: Path = Path.home() / "Data" / "TrainDatasets" / "parquet-files",
-    fname: str = "ms1mv3.parquet",
+    mxnet_dir: Path = Path.home() / "Data" / "FairnessBias" / "bupt_balance",
+    out_dir: Path = Path.home() / "Data" / "FairnessBias" / "bupt_balance-parquet",
+    fname: str = "bupt_balance.parquet",
     # num_shards: int = 20,
 ):
     assert mxnet_dir.exists()
+    BUPT_METADATA = False
+    if mxnet_dir.name == "bupt_balance":
+        BUPT_METADATA = True
 
     def entry_for_id(idx):
         # Read sample at idx
@@ -29,19 +33,29 @@ def main(
         # Treat label info
         label = header.label
         if isinstance(label, (float, int)):
+            identity = int(label)
             return {
                 "img": pil_image,
-                "label": int(label),
+                "label": identity,
             }
         elif isinstance(label, np.ndarray):
             if len(label) == 2:
                 identity = int(label[0])
-                # TODO: For BUPT dataset: label[1] is always 1. Where is ethnicity encoded?
-                ethnicity = int(label[1])
-                return {
-                    "img": pil_image,
-                    "label": identity,
-                }
+                # NOTE: For BUPT dataset: Ethnicity is encoded in metadata
+                if BUPT_METADATA:
+                    # Need to shift idx by -1 as dataframe index starts at 0
+                    assert identity == metadata.loc[idx - 1]["identity"]
+                    ethnicity = int(metadata.loc[idx - 1]["ethnicity"])
+                    return {
+                        "img": pil_image,
+                        "label": identity,
+                        "ethnicity": ethnicity,
+                    }
+                else:
+                    return {
+                        "img": pil_image,
+                        "label": identity,
+                    }
             else:
                 raise NotImplementedError
         else:
@@ -64,6 +78,17 @@ def main(
         imgidx = np.array(list(imgrec.keys))
 
     print("Number of images:", len(imgidx))
+
+    if BUPT_METADATA:
+        metadata = pd.read_csv(
+            mxnet_dir / "train_balancedface.lst",
+            sep="\t",
+            header=None,
+            names=["path", "identity", "ethnicity"],
+        )
+        # print(metadata.head())
+        print("Metadata entries:", len(metadata))
+        assert len(metadata) == len(imgidx)
 
     ds = Dataset.from_generator(generate_entries)
 
