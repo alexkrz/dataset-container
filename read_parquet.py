@@ -2,23 +2,29 @@ import io
 import os
 from pathlib import Path
 
+import datasets
 import matplotlib.pyplot as plt
 import pandas as pd
-from datasets import load_dataset
 from PIL import Image
 
 # from renumics import spotlight
 
 
-def main(data_p: Path = Path.home() / "Data" / "TrainDatasets" / "casia_webface-parquet"):
-    assert data_p.exists()
-    ds = load_dataset("parquet", data_dir=data_p, split="train")
+def main(
+    data_p: str = os.environ["HOME"] + "/Data/Face-Recognition/TrainDatasets/parquet-files/casia_webface.parquet",
+):
+    assert Path(data_p).exists()
+    ds = datasets.Dataset.from_parquet(data_p)
     print("Number of items:", len(ds))
 
     img, label = ds[0].values()
-    plt.imshow(img)
-    plt.xlabel(label)
-    plt.show()
+    print("Image:", img)
+    print("Label:", label)
+
+    fig, ax = plt.subplots()
+    ax.imshow(img)
+    ax.set_xlabel(label)
+    # plt.savefig("plot.png")
 
     # spotlight.show(df)
 

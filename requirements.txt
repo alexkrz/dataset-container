@@ -1,14 +1,12 @@
-pre-commit==3.6.1
-jsonargparse[omegaconf,signatures]==4.27.5
-tqdm==4.66.6
-ipywidgets==8.1.2
-mxnet==1.6.0 # MXNet 1.6.0 not working on Arm-based MacOS
-numpy==1.23.1 # Need to downgrade numpy for compatibility with mxnet
-h5py==3.11.0
-tensorflow==2.8.4
+pre-commit==4.2.*
+ipywidgets==8.1.*
+jsonargparse[signatures,omegaconf]==4.38.*
+matplotlib==3.10.*
+mxnet==1.9.* 
+numpy==1.23.* # Need to downgrade numpy for compatibility with mxnet
 opencv-python==4.6.0.66
-matplotlib==3.8.3
-pandas==2.2.1
+tqdm==4.66.6
+h5py==3.11.0
 lmdb==1.5.1
-datasets==2.21.*
+datasets==3.*
 # renumics-spotlight==1.6.*  # Spotlight currently has a conflict with torch
