@@ -1,0 +1,3 @@
+data_dir: ${oc.env:HOME}/Data/Experimental/B3FD/B3FD_images/B3FD
+out_dir: ${oc.env:HOME}/Data/Experimental/B3FD/B3FD_parquet
+name: b3fd

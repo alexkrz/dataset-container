@@ -5,6 +5,7 @@ from pathlib import Path
 import datasets
 import pandas as pd
 from datasets import Dataset
+from jsonargparse import auto_cli
 from PIL import Image
 from tqdm import tqdm
 
@@ -48,4 +49,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    auto_cli(main, as_positional=False, parser_mode="omegaconf")

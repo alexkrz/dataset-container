@@ -7,7 +7,7 @@ import mxnet as mx
 import numpy as np
 import pandas as pd
 from datasets import Dataset
-from jsonargparse import CLI
+from jsonargparse import auto_cli
 from PIL import Image
 
 
@@ -110,4 +110,4 @@ def main(
 
 
 if __name__ == "__main__":
-    CLI(main, as_positional=False, parser_mode="omegaconf")
+    auto_cli(main, as_positional=False, parser_mode="omegaconf")
